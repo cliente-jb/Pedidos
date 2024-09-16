@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Pedido</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #007bff;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ingresar Pedido</h1>
+    <form id="pedidoForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="nombreCliente">Nombre del Cliente:</label>
+            <input type="text" id="nombreCliente" name="nombreCliente" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Telefono">Teléfono:</label>
+            <input type="text" id="Telefono" name="Telefono" required>
+        </div>
+
+        <div class="form-group">
+            <label for="imagen">Cargar Imagen:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción del pedido:</label>
+            <textarea id="descripcion" name="descripcion" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="fechaHora">Fecha y hora estimada de entrega:</label>
+            <input type="datetime-local" id="fechaHora" name="fechaHora" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Libra">Tamaño del pedido:</label>
+            <select id="Libra" name="Libra" required>
+                <option value="">Seleccionar tamaño</option>
+                <option value="1/2LB">Pequeño</option>
+                <option value="1LB">Mediano</option>
+                <option value="2LB">Grande</option>
+                <option value="otros">Otros</option>
+            </select>
+        </div>
+
+        <div id="otherSizeInput" class="form-group hidden">
+            <label for="otherSize">Especificar tamaño:</label>
+            <input type="text" id="otherSize" name="otherSize">
+        </div>
+
+        <div class="form-group">
+            <label for="ingredientes">Relleno:</label>
+            <select id="ingredientes" name="ingredientes" multiple required>
+                <option value="chocolate">Chocolate</option>
+                <option value="fresas">Fresas</option>
+                <option value="guayaba">Guayaba</option>
+                <option value="piña">Piña</option>
+                <option value="caramelo">Caramelo</option>
+                <option value="crema_leche">Crema de Leche</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="base">Base:</label>
+            <select id="base" name="base" multiple required>
+                <option value="dorada">Dorada</option>
+                <option value="plateada">Plateada</option>
+                <option value="blanca">Blanca</option>
+                <option value="topper">Topper</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="imprimir">Imprimir:</label>
+            <select id="imprimir" name="imprimir" multiple required>
+                <option value="fondant">Fondant</option>
+                <option value="flores">Flores</option>
+                <option value="comercial">Comercial</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="dedicatoria">Dedicatoria:</label>
+            <input type="text" id="dedicatoria" name="dedicatoria" required>
+        </div>
+
+        <div class="form-group">
+            <label for="delivery">¿Requiere entrega a domicilio?</label>
+            <input type="checkbox" id="delivery" name="delivery">
+        </div>
+
+        <div id="direccionContainer" class="form-group hidden">
+            <label for="direccion">Dirección de entrega:</label>
+            <input type="text" id="direccion" name="direccion">
+        </div>
+
+        <button type="submit">Enviar a cocina</button>
+    </form>
+
+    <h2>Ir a la página de cocina</h2>
+    <a href="cocina.html" target="_blank">Ver pedidos en la cocina</a>
+
+    <script src="script.js" defer></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyAFb6yvZx8vZ_-EkiSDv09r6pUmw3TwJPs",
+          authDomain: "pedido-b4d7d.firebaseapp.com",
+          projectId: "pedido-b4d7d",
+          storageBucket: "pedido-b4d7d.appspot.com",
+          messagingSenderId: "331760838311",
+          appId: "1:331760838311:web:c364e9b1cee4b7bc83dd82",
+          measurementId: "G-9663CJMGQX"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>
+      <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+</body>
+</html>
+
