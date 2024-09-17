@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mostrar confirmación
             confirmacionDiv.style.display = 'block';
 
-            // Actualizar la lista de pedidos enviados
-            actualizarPedidosEnviados();
+            // Redirigir a la página de cocina
+            window.location.href = 'https://my-pedidos.vercel.app/cocina.html';
 
         } catch (error) {
             console.error('Error al enviar el pedido:', error);
@@ -78,4 +78,3 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizarPedidosEnviados();
 });
 
-cargarPedidos();
