@@ -83,6 +83,37 @@
         .form-group:last-child {
             margin-bottom: 0;
         }
+
+        #confirmacion {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            display: none;
+        }
+
+        #pedidosEnviados {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .pedido {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pedido img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -178,35 +209,19 @@
         <button type="submit">Enviar a cocina</button>
     </form>
 
+    <div id="confirmacion">Pedido enviado a la cocina exitosamente.</div>
+
+    <h2>Pedidos Enviados</h2>
+    <div id="pedidosEnviados"></div>
+
     <h2>Ir a la página de cocina</h2>
     <a href="cocina.html" target="_blank">Ver pedidos en la cocina</a>
 
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"></script>
     <script src="script.js" defer></script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyAFb6yvZx8vZ_-EkiSDv09r6pUmw3TwJPs",
-          authDomain: "pedido-b4d7d.firebaseapp.com",
-          projectId: "pedido-b4d7d",
-          storageBucket: "pedido-b4d7d.appspot.com",
-          messagingSenderId: "331760838311",
-          appId: "1:331760838311:web:c364e9b1cee4b7bc83dd82",
-          measurementId: "G-9663CJMGQX"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>
-      <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
 </body>
 </html>
 
