@@ -1,0 +1,14 @@
+const pedido = {
+    id: 1,
+    nombreCliente: "Juan Pérez",
+    descripcion: "Pastel de chocolate",
+    fechaHora: "2024-09-18T10:00",
+    Libra: "1LB",
+    ingredientes: ["chocolate"],
+    base: ["blanca"],
+    imprimir: ["fondant"],
+    dedicatoria: "Feliz Cumpleaños",
+    direccion: "Calle Falsa 123"
+};
+
+localStorage.setItem('pedido_1', JSON.stringify(pedido));
