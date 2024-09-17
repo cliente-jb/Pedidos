@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocina - Pedidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        .pedido {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .pedido img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pedidos en la Cocina</h1>
+    <div id="pedidos"></div>
+
+    <script>
+        async function cargarPedidos() {
+            try {
+                const response = await fetch('/api/pedidos');
+                const pedidos = await response.json();
+                const pedidosContainer = document.getElementById('pedidos');
+
+                pedidosContainer.innerHTML = '';
+
+                pedidos.forEach(pedido => {
+                    const pedidoDiv = document.createElement('div');
+                    pedidoDiv.className = 'pedido';
+                    pedidoDiv.innerHTML = `
+                        <img src="${pedido.imagen}" alt="Imagen del pedido">
+                        <p><strong>Cliente:</strong> ${pedido.nombreCliente}</p>
+                        <p><strong>Descripción:</strong> ${pedido.descripcion}</p>
+                        <p><strong>Fecha y Hora:</strong> ${pedido.fechaHora}</p>
+                        <p><strong>Tamaño:</strong> ${pedido.Libra}</p>
+                        <p><strong>Relleno:</strong> ${pedido.ingredientes.join(', ')}</p>
+                        <p><strong>Base:</strong> ${pedido.base.join(', ')}</p>
+                        <p><strong>Imprimir:</strong> ${pedido.imprimir.join(', ')}</p>
+                        <p><strong>Dedicatoria:</strong> ${pedido.dedicatoria}</p>
+                        <p><strong>Dirección de Entrega:</strong> ${pedido.direccion || 'N/A'}</p>
+                        <button onclick="actualizarEstado('${pedido.id}')">Marcar como Preparado</button>
+                    `;
+                    pedidosContainer.appendChild(pedidoDiv);
+                });
+            } catch (error) {
+                console.error('Error al cargar pedidos:', error);
+            }
+        }
+
+        async function actualizarEstado(id) {
+            try {
+                const response = await fetch(`/api/pedido/${id}/actualizar`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ estado: 'preparado' })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Estado del pedido actualizado a Preparado.');
+                    cargarPedidos(); // Actualiza la lista de pedidos después de cambiar el estado
+                } else {
+                    alert('Error al actualizar el estado del pedido.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar el estado del pedido.');
+            }
+        }
+
+        // Cargar los pedidos al iniciar la página
+        cargarPedidos();
+    </script>
+
+    <a href="index.html" target="_blank">Volver a la página de pedidos</a>
+</body>
+</html>
