@@ -1,59 +1,81 @@
-// Función para cargar los pedidos desde el servidor
-async function cargarPedidos() {
-    try {
-        const response = await fetch('/api/pedidos');
-        const pedidos = await response.json();
-        const pedidosContainer = document.getElementById('pedidos');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('pedidoForm');
+    const confirmacionDiv = document.getElementById('confirmacion');
+    const pedidosEnviadosDiv = document.getElementById('pedidosEnviados');
 
-        pedidosContainer.innerHTML = '';
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Evita que el formulario se envíe de la manera tradicional
 
-        pedidos.forEach(pedido => {
+        const formData = new FormData(form);
+
+        try {
+            // Subir la imagen a Firebase Storage
+            const file = formData.get('imagen');
+            const storageRef = firebase.storage().ref(`images/${file.name}`);
+            await storageRef.put(file);
+            const imageUrl = await storageRef.getDownloadURL();
+
+            // Obtener los datos del formulario
+            const pedido = {
+                nombreCliente: formData.get('nombreCliente'),
+                Telefono: formData.get('Telefono'),
+                imagen: imageUrl,
+                descripcion: formData.get('descripcion'),
+                fechaHora: formData.get('fechaHora'),
+                Libra: formData.get('Libra'),
+                otherSize: formData.get('otherSize') || '',
+                ingredientes: formData.getAll('ingredientes'),
+                base: formData.getAll('base'),
+                imprimir: formData.getAll('imprimir'),
+                dedicatoria: formData.get('dedicatoria'),
+                delivery: formData.has('delivery'),
+                direccion: formData.get('direccion') || ''
+            };
+
+            // Guardar el pedido en Firestore
+            const db = firebase.firestore();
+            await db.collection('pedidos').add(pedido);
+
+            // Mostrar confirmación
+            confirmacionDiv.style.display = 'block';
+
+            // Actualizar la lista de pedidos enviados
+            actualizarPedidosEnviados();
+
+        } catch (error) {
+            console.error('Error al enviar el pedido:', error);
+            alert('Hubo un problema al enviar el pedido. Inténtalo nuevamente.');
+        }
+    });
+
+    const actualizarPedidosEnviados = async () => {
+        const db = firebase.firestore();
+        const pedidosSnapshot = await db.collection('pedidos').get();
+        pedidosEnviadosDiv.innerHTML = '';
+
+        pedidosSnapshot.forEach(doc => {
+            const pedido = doc.data();
             const pedidoDiv = document.createElement('div');
             pedidoDiv.className = 'pedido';
             pedidoDiv.innerHTML = `
                 <img src="${pedido.imagen}" alt="Imagen del pedido">
-                <p><strong>Cliente:</strong> ${pedido.nombreCliente}</p>
+                <p><strong>Nombre:</strong> ${pedido.nombreCliente}</p>
+                <p><strong>Teléfono:</strong> ${pedido.Telefono}</p>
                 <p><strong>Descripción:</strong> ${pedido.descripcion}</p>
                 <p><strong>Fecha y Hora:</strong> ${pedido.fechaHora}</p>
-                <p><strong>Tamaño:</strong> ${pedido.Libra}</p>
+                <p><strong>Tamaño:</strong> ${pedido.Libra} ${pedido.otherSize ? `(${pedido.otherSize})` : ''}</p>
                 <p><strong>Relleno:</strong> ${pedido.ingredientes.join(', ')}</p>
                 <p><strong>Base:</strong> ${pedido.base.join(', ')}</p>
                 <p><strong>Imprimir:</strong> ${pedido.imprimir.join(', ')}</p>
                 <p><strong>Dedicatoria:</strong> ${pedido.dedicatoria}</p>
-                <p><strong>Dirección de Entrega:</strong> ${pedido.direccion || 'N/A'}</p>
-                <button onclick="actualizarEstado('${pedido.id}')">Marcar como Preparado</button>
+                <p><strong>Dirección:</strong> ${pedido.direccion || 'N/A'}</p>
             `;
-            pedidosContainer.appendChild(pedidoDiv);
+            pedidosEnviadosDiv.appendChild(pedidoDiv);
         });
-    } catch (error) {
-        console.error('Error al cargar pedidos:', error);
-    }
-}
+    };
 
-// Función para actualizar el estado de un pedido
-async function actualizarEstado(id) {
-    try {
-        const response = await fetch(`/api/pedido/${id}/actualizar`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ estado: 'preparado' })
-        });
+    // Actualizar la lista de pedidos cuando la página se carga
+    actualizarPedidosEnviados();
+});
 
-        const result = await response.json();
-
-        if (result.success) {
-            alert('Estado del pedido actualizado a Preparado.');
-            cargarPedidos(); // Actualiza la lista de pedidos después de cambiar el estado
-        } else {
-            alert('Error al actualizar el estado del pedido.');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al actualizar el estado del pedido.');
-    }
-}
-
-// Cargar los pedidos al iniciar la página
 cargarPedidos();
