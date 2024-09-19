@@ -6,127 +6,133 @@
     <title>Ingresar Pedido</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
+     body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0; /* Ajustado a 0 para evitar márgenes excesivos */
+    padding: 0; /* Ajustado a 0 para evitar rellenos excesivos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('img/pastelera'); /* Asegúrate de que la ruta y la extensión sean correctas */
+    background-size: 33% 90% ; /* Ajusta el tamaño de la imagen a 50% del contenedor */
+    background-position: top left;
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
 
-        h1, h2 {
-            color: #007bff;
+        h1 {
+            margin: 20px 0;
+            color: #333;
         }
 
         form {
             background-color: #fff;
-            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
             max-width: 600px;
-            margin: auto;
+            margin: 20px auto;
         }
 
-        label {
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
             display: block;
-            margin: 10px 0 5px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
         }
-
-        input[type="text"],
-        input[type="file"],
-        textarea,
-        select {
+        
+        #footer {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 14px;
+    color: #555;
+    background-position: top left;
+          }
+          
+        .form-group input[type="text"],
+        .form-group input[type="datetime-local"],
+        .form-group input[type="tel"],
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
 
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
+        .form-group input[type="file"] {
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
         }
 
-        .hidden {
+        .form-group.hidden {
             display: none;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #confirmacion {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Ocultar por defecto */
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        h2 {
+            margin: 20px 0 10px;
+            color: #333;
         }
 
         a {
             color: #007bff;
             text-decoration: none;
-            font-size: 18px;
         }
 
         a:hover {
             text-decoration: underline;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        #confirmacion {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
-            display: none;
-        }
-
-        #pedidosEnviados {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .pedido {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .pedido img {
-            max-width: 100px;
-            height: auto;
-            display: block;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
     <h1>Ingresar Pedido</h1>
-    <form id="pedidoForm" enctype="multipart/form-data">
+    <form id="pedidoForm" action="procesar_pedido.php" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombreCliente">Nombre del Cliente:</label>
             <input type="text" id="nombreCliente" name="nombreCliente" required>
         </div>
 
         <div class="form-group">
-            <label for="Telefono">Teléfono:</label>
-            <input type="text" id="Telefono" name="Telefono" required>
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" required pattern="\d{10}" placeholder="1234567890">
         </div>
 
         <div class="form-group">
@@ -148,9 +154,9 @@
             <label for="Libra">Tamaño del pedido:</label>
             <select id="Libra" name="Libra" required>
                 <option value="">Seleccionar tamaño</option>
-                <option value="1/2LB"/option>
-                <option value="1LB"/option>
-                <option value="2LB"/option>
+                <option value="1/2LB">1/2LB</option>
+                <option value="1LB">1LB</option>
+                <option value="2LB">2LB</option>
                 <option value="otros">Otros</option>
             </select>
         </div>
@@ -161,34 +167,29 @@
         </div>
 
         <div class="form-group">
-            <label for="ingredientes">Relleno:</label>
-            <select id="ingredientes" name="ingredientes" multiple required>
-                <option value="chocolate">Chocolate</option>
-                <option value="fresas">Fresas</option>
-                <option value="guayaba">Guayaba</option>
-                <option value="piña">Piña</option>
-                <option value="caramelo">Caramelo</option>
-                <option value="crema_leche">Crema de Leche</option>
-            </select>
+            <label>Relleno:</label>
+            <label><input type="checkbox" name="ingredientes[]" value="chocolate"> Chocolate</label>
+            <label><input type="checkbox" name="ingredientes[]" value="vainilla"> Vainilla</label>
+            <label><input type="checkbox" name="ingredientes[]" value="fresa"> Fresa</label>
+            <label><input type="checkbox" name="ingredientes[]" value="guayaba"> Guayaba</label>
+            <label><input type="checkbox" name="ingredientes[]" value="piña"> Piña</label>
+            <label><input type="checkbox" name="ingredientes[]" value="caramelo"> Caramelo</label>
+            <label><input type="checkbox" name="ingredientes[]" value="crema_leche"> Crema de leche</label>
         </div>
 
         <div class="form-group">
             <label for="base">Base:</label>
-            <select id="base" name="base" multiple required>
-                <option value="dorada">Dorada</option>
-                <option value="plateada">Plateada</option>
-                <option value="blanca">Blanca</option>
-                <option value="topper">Topper</option>
-            </select>
+            <label><input type="checkbox" name="base[]" value="dorada"> Dorada</label>
+            <label><input type="checkbox" name="base[]" value="plateada"> Plateada</label>
+            <label><input type="checkbox" name="base[]" value="blanca"> Blanca</label>
+            <label><input type="checkbox" name="base[]" value="topper"> Topper</label>
         </div>
 
         <div class="form-group">
             <label for="imprimir">Imprimir:</label>
-            <select id="imprimir" name="imprimir" multiple required>
-                <option value="fondant">Fondant</option>
-                <option value="flores">Flores</option>
-                <option value="comercial">Comercial</option>
-            </select>
+            <label><input type="checkbox" name="imprimir[]" value="fondant"> Fondant</label>
+            <label><input type="checkbox" name="imprimir[]" value="flores"> Flores</label>
+            <label><input type="checkbox" name="imprimir[]" value="comercial"> Comercial</label>
         </div>
 
         <div class="form-group">
@@ -211,17 +212,46 @@
 
     <div id="confirmacion">Pedido enviado a la cocina exitosamente.</div>
 
-    <h2>Pedidos Enviados</h2>
-    <div id="pedidosEnviados"></div>
+    
+    <script>
+    wind
+
+    window.onload = function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('success')) {
+            var confirmacion = document.getElementById('confirmacion');
+            confirmacion.style.display = 'block';
+        }
+    };
+</script>
 
     <h2>Ir a la página de cocina</h2>
-    <a href="cocina.html" target="_blank">Ver pedidos en la cocina</a>
+    <a href="cocina.php" target="_blank">Ver pedidos en la cocina</a>
 
-    <script src="https://my-pedidos.vercel.app/cocina.html"></script>
-    <script src="https://my-pedidos.vercel.app/cocina.html"></script>
-    <script src="https://my-pedidos.vercel.app/cocina.html"></script>
-    <script src="https://my-pedidos.vercel.app/cocina.html"></script>
-    <script src="script.js" defer></script>
+    <script>
+        // Mostrar/ocultar campos adicionales basado en la selección del tamaño
+        document.getElementById('Libra').addEventListener('change', function() {
+            var otherSizeInput = document.getElementById('otherSizeInput');
+            if (this.value === 'otros') {
+                otherSizeInput.classList.remove('hidden');
+            } else {
+                otherSizeInput.classList.add('hidden');
+            }
+        });
+
+        // Mostrar/ocultar dirección de entrega basado en el checkbox de entrega
+        document.getElementById('delivery').addEventListener('change', function() {
+            var direccionContainer = document.getElementById('direccionContainer');
+            if (this.checked) {
+                direccionContainer.classList.remove('hidden');
+            } else {
+                direccionContainer.classList.add('hidden');
+            }
+        });
+    </script>
+    <div id="footer">
+    Diseñado por José Abel | <a href="https://wa.me/18092544899" target="_blank">Contacto por WhatsApp</a>
 </body>
 </html>
+
 
